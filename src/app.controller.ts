@@ -25,6 +25,21 @@ export class AppController {
     return this.appService.createTestPlaylist();
   }
 
+  @Get('slides')
+  async getSlides() {
+    return this.appService.getSlides();
+  }
+
+  @Get('createTestSlide')
+  async createTestSlide() {
+    return this.appService.createTestSlide();
+  }
+
+  @Get('templates')
+  async getTemplates() {
+    return this.appService.getTemplates();
+  }
+
   @Get('adminToken')
   async getAdminToken(): Promise<object> {
     return this.appService.getAdminToken();
