@@ -39,12 +39,39 @@ $ curl localhost:3000/playLists
 $ curl localhost:3000/createTestPlaylist
 ```
 
-## Notes
+## PoC Notes
+
+### OpenApi generated client
+
+We have a choice between multiple generators when it comes to creating typescript
+clients for the API. We currently opt for `typescript-axios` but there are
+the following alternatives that could also be considered:
+
+* typescript-fetch
+* typescript-node
+* typescript-rxjs
+
+We've tried and discarded the following:
+
+* typescript-nestjs (compile errors)
+
+### OpenApi client generation
+
+The OpenApi spec is created via a mix of [api_platform auto-generation](https://github.com/os2display/display-api-service/blob/168d10d2019a161e02ed8ba83e21c5d2878abbcb/composer.json#L130)
+ configured via [yaml-files](https://github.com/os2display/display-api-service/tree/168d10d2019a161e02ed8ba83e21c5d2878abbcb/config/api_platform),
+and a more handheld specification via a [factory](https://github.com/os2display/display-api-service/blob/168d10d2019a161e02ed8ba83e21c5d2878abbcb/src/OpenApi/OpenApiFactory.php)
+
+We use the same spec to generate a typescript client via the `scripts/generate-client.sh`.
+
+The Admin and Display projects also uses this API, albeit in a type unsafe
+manner.
+
+### Invalid OpenAPI Spec
 
 Note that you so far must overwrite the specified InputJsonld (Types),
 see an example here with SlideSlideInputJsonld
 
-```
+```typescript
  async createTestSlide(): Promise<void> {
     try {
       const config = await this.getAuthenticatedConfig();
