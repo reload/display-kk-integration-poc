@@ -5,7 +5,10 @@ import {
   Configuration,
   PlaylistPlaylistInputJsonld,
   PlaylistsApi,
+  SlideSlideInputJsonld,
+  SlidesApi,
   Token,
+  TemplatesApi,
 } from './display-api-client';
 
 @Injectable()
@@ -75,6 +78,58 @@ export class AppService {
     };
 
     playlistApi.createV1Playlist(playlistData);
+  }
+
+  async getSlides() {
+    const config = await this.getAuthenticatedConfig();
+    const slideApi = new SlidesApi(config);
+
+    const result = await slideApi.getV1Slides();
+    const data = result.data['hydra:member'];
+    return data;
+  }
+
+  async getTemplates() {
+    const config = await this.getAuthenticatedConfig();
+    const templatesApi = new TemplatesApi(config);
+
+    const result = await templatesApi.getV1Templates();
+    const data = result.data['hydra:member'];
+    return data;
+  }
+
+  async createTestSlide(): Promise<void> {
+    try {
+      const config = await this.getAuthenticatedConfig();
+      const slideApi = new SlidesApi(config);
+
+      // Generate a unique data object for the slide.
+      const timestamp = Date.now() + '';
+
+      const slideData: SlideSlideInputJsonld = {
+        title: 'Slide-' + timestamp,
+        theme: '',
+        description: '',
+        templateInfo: {
+          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG',
+          options: [],
+        },
+        duration: null,
+        content: {
+          title: 'Overskrift på slide' + timestamp,
+          text: '<p>Tekst på slide</p>',
+        },
+        media: [],
+        feed: null,
+        published: { from: null, to: null },
+      } as unknown;
+      await slideApi.createV1Slides(slideData);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 97 ~ AppService ~ createTestSlide ~ error',
+        error,
+      );
+    }
   }
 
   async getHello(): Promise<string> {

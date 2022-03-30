@@ -38,3 +38,41 @@ $ curl localhost:3000/playLists
 # Create a test playlist
 $ curl localhost:3000/createTestPlaylist
 ```
+
+## Notes
+
+Note that you so far must overwrite the specified InputJsonld (Types),
+see an example here with SlideSlideInputJsonld
+
+```
+ async createTestSlide(): Promise<void> {
+    try {
+      const config = await this.getAuthenticatedConfig();
+      const slideApi = new SlidesApi(config);
+
+      // Generate a unique data object for the slide.
+      const timestamp = Date.now() + '';
+
+      const slideData: SlideSlideInputJsonld = {
+        title: 'Slide-' + timestamp,
+        theme: '',
+        description: '',
+        templateInfo: {
+          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG',
+          options: [],
+        },
+        duration: null,
+        content: {
+          title: 'Overskrift på slide' + timestamp,
+          text: '<p>Tekst på slide</p>',
+        },
+        media: [],
+        feed: null,
+        published: { from: null, to: null },
+      } as unknown;
+      await slideApi.createV1Slides(slideData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+```
