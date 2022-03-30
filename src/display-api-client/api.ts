@@ -1537,6 +1537,12 @@ export interface ScreenGroupScreenGroup {
      * @memberof ScreenGroupScreenGroup
      */
     'campaigns'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ScreenGroupScreenGroup
+     */
+    'screens'?: string;
 }
 /**
  * 
@@ -1660,6 +1666,12 @@ export interface ScreenGroupScreenGroupJsonld {
      * @memberof ScreenGroupScreenGroupJsonld
      */
     'campaigns'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ScreenGroupScreenGroupJsonld
+     */
+    'screens'?: string;
 }
 /**
  * 
@@ -6893,6 +6905,57 @@ export const ScreenGroupsApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
+         * Get screens in screen group.
+         * @summary Gets screens in screen group.
+         * @param {string} id 
+         * @param {number} [page] 
+         * @param {string} [itemsPerPage] The number of items per page
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getV1ScreenIdScreenGroup: async (id: string, page?: number, itemsPerPage?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getV1ScreenIdScreenGroup', 'id', id)
+            const localVarPath = `/v1/screen-groups/{id}/screens`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            // authentication tenantHeader required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization-Tenant-Key", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (itemsPerPage !== undefined) {
+                localVarQueryParameter['itemsPerPage'] = itemsPerPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Create Screen group resources.
          * @summary Create Screen group resources.
          * @param {ScreenGroupScreenGroupInputJsonld} screenGroupScreenGroupInputJsonld The new ScreenGroup resource
@@ -7112,6 +7175,19 @@ export const ScreenGroupsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Get screens in screen group.
+         * @summary Gets screens in screen group.
+         * @param {string} id 
+         * @param {number} [page] 
+         * @param {string} [itemsPerPage] The number of items per page
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getV1ScreenIdScreenGroup(id: string, page?: number, itemsPerPage?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getV1ScreenIdScreenGroup(id, page, itemsPerPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Create Screen group resources.
          * @summary Create Screen group resources.
          * @param {ScreenGroupScreenGroupInputJsonld} screenGroupScreenGroupInputJsonld The new ScreenGroup resource
@@ -7224,6 +7300,18 @@ export const ScreenGroupsApiFactory = function (configuration?: Configuration, b
          */
         getV1ScreenGroupsId(id: string, options?: any): AxiosPromise<void> {
             return localVarFp.getV1ScreenGroupsId(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get screens in screen group.
+         * @summary Gets screens in screen group.
+         * @param {string} id 
+         * @param {number} [page] 
+         * @param {string} [itemsPerPage] The number of items per page
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getV1ScreenIdScreenGroup(id: string, page?: number, itemsPerPage?: string, options?: any): AxiosPromise<InlineResponse200> {
+            return localVarFp.getV1ScreenIdScreenGroup(id, page, itemsPerPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Create Screen group resources.
@@ -7344,6 +7432,20 @@ export class ScreenGroupsApi extends BaseAPI {
      */
     public getV1ScreenGroupsId(id: string, options?: AxiosRequestConfig) {
         return ScreenGroupsApiFp(this.configuration).getV1ScreenGroupsId(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get screens in screen group.
+     * @summary Gets screens in screen group.
+     * @param {string} id 
+     * @param {number} [page] 
+     * @param {string} [itemsPerPage] The number of items per page
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ScreenGroupsApi
+     */
+    public getV1ScreenIdScreenGroup(id: string, page?: number, itemsPerPage?: string, options?: AxiosRequestConfig) {
+        return ScreenGroupsApiFp(this.configuration).getV1ScreenIdScreenGroup(id, page, itemsPerPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7864,8 +7966,7 @@ export const ScreensApiAxiosParamCreator = function (configuration?: Configurati
          * @summary Retrieves a collection of Screen resources.
          * @param {number} [page] 
          * @param {string} [itemsPerPage] The number of items per page
-         * @param {string} [title] 
-         * @param {string} [description] 
+         * @param {string} [search] Search on both location and title
          * @param {string} [createdBy] 
          * @param {Array<string>} [createdBy2] 
          * @param {string} [modifiedBy] 
@@ -7876,7 +7977,7 @@ export const ScreensApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getV1Screens: async (page?: number, itemsPerPage?: string, title?: string, description?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getV1Screens: async (page?: number, itemsPerPage?: string, search?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/v1/screens`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7904,12 +8005,8 @@ export const ScreensApiAxiosParamCreator = function (configuration?: Configurati
                 localVarQueryParameter['itemsPerPage'] = itemsPerPage;
             }
 
-            if (title !== undefined) {
-                localVarQueryParameter['title'] = title;
-            }
-
-            if (description !== undefined) {
-                localVarQueryParameter['description'] = description;
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
             }
 
             if (createdBy !== undefined) {
@@ -8360,8 +8457,7 @@ export const ScreensApiFp = function(configuration?: Configuration) {
          * @summary Retrieves a collection of Screen resources.
          * @param {number} [page] 
          * @param {string} [itemsPerPage] The number of items per page
-         * @param {string} [title] 
-         * @param {string} [description] 
+         * @param {string} [search] Search on both location and title
          * @param {string} [createdBy] 
          * @param {Array<string>} [createdBy2] 
          * @param {string} [modifiedBy] 
@@ -8372,8 +8468,8 @@ export const ScreensApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getV1Screens(page?: number, itemsPerPage?: string, title?: string, description?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getV1Screens(page, itemsPerPage, title, description, createdBy, createdBy2, modifiedBy, modifiedBy2, orderTitle, orderDescription, orderCreatedAt, options);
+        async getV1Screens(page?: number, itemsPerPage?: string, search?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getV1Screens(page, itemsPerPage, search, createdBy, createdBy2, modifiedBy, modifiedBy2, orderTitle, orderDescription, orderCreatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8573,8 +8669,7 @@ export const ScreensApiFactory = function (configuration?: Configuration, basePa
          * @summary Retrieves a collection of Screen resources.
          * @param {number} [page] 
          * @param {string} [itemsPerPage] The number of items per page
-         * @param {string} [title] 
-         * @param {string} [description] 
+         * @param {string} [search] Search on both location and title
          * @param {string} [createdBy] 
          * @param {Array<string>} [createdBy2] 
          * @param {string} [modifiedBy] 
@@ -8585,8 +8680,8 @@ export const ScreensApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getV1Screens(page?: number, itemsPerPage?: string, title?: string, description?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options?: any): AxiosPromise<void> {
-            return localVarFp.getV1Screens(page, itemsPerPage, title, description, createdBy, createdBy2, modifiedBy, modifiedBy2, orderTitle, orderDescription, orderCreatedAt, options).then((request) => request(axios, basePath));
+        getV1Screens(page?: number, itemsPerPage?: string, search?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options?: any): AxiosPromise<void> {
+            return localVarFp.getV1Screens(page, itemsPerPage, search, createdBy, createdBy2, modifiedBy, modifiedBy2, orderTitle, orderDescription, orderCreatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8797,8 +8892,7 @@ export class ScreensApi extends BaseAPI {
      * @summary Retrieves a collection of Screen resources.
      * @param {number} [page] 
      * @param {string} [itemsPerPage] The number of items per page
-     * @param {string} [title] 
-     * @param {string} [description] 
+     * @param {string} [search] Search on both location and title
      * @param {string} [createdBy] 
      * @param {Array<string>} [createdBy2] 
      * @param {string} [modifiedBy] 
@@ -8810,8 +8904,8 @@ export class ScreensApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ScreensApi
      */
-    public getV1Screens(page?: number, itemsPerPage?: string, title?: string, description?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options?: AxiosRequestConfig) {
-        return ScreensApiFp(this.configuration).getV1Screens(page, itemsPerPage, title, description, createdBy, createdBy2, modifiedBy, modifiedBy2, orderTitle, orderDescription, orderCreatedAt, options).then((request) => request(this.axios, this.basePath));
+    public getV1Screens(page?: number, itemsPerPage?: string, search?: string, createdBy?: string, createdBy2?: Array<string>, modifiedBy?: string, modifiedBy2?: Array<string>, orderTitle?: 'asc' | 'desc', orderDescription?: 'asc' | 'desc', orderCreatedAt?: 'asc' | 'desc', options?: AxiosRequestConfig) {
+        return ScreensApiFp(this.configuration).getV1Screens(page, itemsPerPage, search, createdBy, createdBy2, modifiedBy, modifiedBy2, orderTitle, orderDescription, orderCreatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
