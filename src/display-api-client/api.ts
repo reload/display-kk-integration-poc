@@ -1239,10 +1239,10 @@ export interface PlaylistPlaylistJsonld {
     'isCampaign'?: boolean;
     /**
      * 
-     * @type {object}
+     * @type {Array<string>}
      * @memberof PlaylistPlaylistJsonld
      */
-    'published'?: object;
+    'published'?: Array<string>;
 }
 /**
  * 
@@ -8029,7 +8029,7 @@ export const ScreensApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'text/html';
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
