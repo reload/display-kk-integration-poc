@@ -9,6 +9,7 @@ import {
   SlidesApi,
   Token,
   TemplatesApi,
+  CollectionJsonld,
 } from './display-api-client';
 
 @Injectable()
@@ -77,7 +78,11 @@ export class AppService {
       description: 'Description of playlist-' + timestamp,
     };
 
-    playlistApi.createV1Playlist(playlistData);
+    const testplaylist = await playlistApi.createV1Playlist(playlistData);
+    console.log(
+      '🚀 ~ file: app.service.ts ~ line 82 ~ AppService ~ createTestPlaylist ~ testplaylist',
+      testplaylist,
+    );
   }
 
   async getSlides() {
@@ -127,13 +132,118 @@ export class AppService {
     } catch (error) {
       console.log(
         '🚀 ~ file: app.service.ts ~ line 97 ~ AppService ~ createTestSlide ~ error',
-        error,
+        error.message,
+      );
+    }
+  }
+
+  async updateSlide() {
+    try {
+      const timestamp = Date.now() + '';
+      const config = await this.getAuthenticatedConfig();
+      const slideApi = new SlidesApi(config);
+
+      const collectionObject: CollectionJsonld = {
+        values: ['hej'],
+      } as unknown;
+
+      const slideData: SlideSlideInputJsonld = {
+        title: 'kasper 5 ' + timestamp,
+        theme: '',
+        description: '',
+        templateInfo: {
+          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG',
+          options: [],
+        },
+        onPlaylists: collectionObject,
+        duration: null,
+        content: { title: 'ny test', text: '<p>Tekst på slide 1</p>' },
+        media: [],
+        feed: null,
+        published: { from: null, to: null },
+      } as unknown;
+
+      await slideApi.putV1SlideId('01FZFYKN3X9QA1K9BYTZZ7RW4J', slideData);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 140 ~ AppService ~ updateSlide ~ error',
+        error.message,
+      );
+    }
+  }
+
+  async createSlideInPlaylist() {
+    try {
+      const timestamp = Date.now() + '';
+      const config = await this.getAuthenticatedConfig();
+      const slideApi = new SlidesApi(config);
+      const playlistApi = new PlaylistsApi(config);
+
+      const playlistData: PlaylistPlaylistInputJsonld = {
+        title: 'playlist-' + timestamp,
+        description: 'Description of playlist-' + timestamp,
+      };
+
+      const playlist = await playlistApi.createV1Playlist(playlistData);
+      const playlistId = playlist.data['@id'].replace('/v1/playlists/', '');
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 149 ~ AppService ~ createSlideInPlaylist ~ playlistId',
+        playlistId,
+      );
+
+      const collectionObject: CollectionJsonld = {
+        values: [playlistId],
+      };
+
+      const slideDataTemplate: SlideSlideInputJsonld = {
+        title: 'Slide-' + timestamp,
+        theme: '',
+        description: '',
+        onPlaylists: collectionObject,
+
+        templateInfo: {
+          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG',
+          options: [],
+        },
+        duration: null,
+        content: {
+          title: 'Overskrift på slide' + timestamp,
+          text: '<p>Tekst på slide</p>',
+        },
+        media: [],
+        feed: null,
+        published: { from: null, to: null },
+      } as unknown;
+
+      const slideData = await slideApi.createV1Slides(slideDataTemplate);
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 178 ~ AppService ~ createSlideInPlaylist ~ slideData',
+        slideData.data,
+      );
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 140 ~ AppService ~ createSlideInPlaylist ~ error',
+        error.message,
       );
     }
   }
 
   async getHello(): Promise<string> {
     return 'Hello World!';
+  }
+
+  async deleteSlide() {
+    try {
+      const config = await this.getAuthenticatedConfig();
+      const slideApi = new SlidesApi(config);
+
+      await slideApi.deleteV1SlideId('01FZFYJ33PH1FQGHWR1R4TT9Q1');
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 236 ~ AppService ~ deleteSlide ~ error',
+        error.message,
+      );
+    }
   }
 }
 
