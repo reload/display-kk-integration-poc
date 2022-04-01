@@ -35,11 +35,6 @@ export class AppController {
     return this.appService.createTestSlide();
   }
 
-  @Get('deleteSlide')
-  async deleteSlide() {
-    return this.appService.deleteSlide();
-  }
-
   @Get('templates')
   async getTemplates() {
     return this.appService.getTemplates();
@@ -48,11 +43,6 @@ export class AppController {
   @Get('createSlideInPlaylist')
   async createSlideInPlaylist() {
     return this.appService.createSlideInPlaylist();
-  }
-
-  @Get('updateSlide')
-  async updateSlide() {
-    return this.appService.updateSlide();
   }
 
   @Get('adminToken')
