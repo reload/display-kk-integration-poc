@@ -9,6 +9,7 @@ import {
   SlidesApi,
   Token,
   TemplatesApi,
+  CollectionJsonld,
 } from './display-api-client';
 
 @Injectable()
@@ -69,7 +70,7 @@ export class AppService {
   async createTestPlaylist(): Promise<void> {
     const config = await this.getAuthenticatedConfig();
     const playlistApi = new PlaylistsApi(config);
-
+    playlistApi.putV1PlaylistSlideId;
     // Generate a unique data object for the playlist.
     const timestamp = Date.now() + '';
     const playlistData: PlaylistPlaylistInputJsonld = {
@@ -77,7 +78,7 @@ export class AppService {
       description: 'Description of playlist-' + timestamp,
     };
 
-    playlistApi.createV1Playlist(playlistData);
+    const testplaylist = await playlistApi.createV1Playlist(playlistData);
   }
 
   async getSlides() {
@@ -127,7 +128,64 @@ export class AppService {
     } catch (error) {
       console.log(
         '🚀 ~ file: app.service.ts ~ line 97 ~ AppService ~ createTestSlide ~ error',
-        error,
+        error.message,
+      );
+    }
+  }
+
+  async createSlideInPlaylist() {
+    try {
+      const timestamp = Date.now() + '';
+      const config = await this.getAuthenticatedConfig();
+      const slideApi = new SlidesApi(config);
+      const playlistApi = new PlaylistsApi(config);
+
+      const playlistData: PlaylistPlaylistInputJsonld = {
+        title: 'playlist-' + timestamp,
+        description: 'Description of playlist-' + timestamp,
+      };
+
+      const playlist = await playlistApi.createV1Playlist(playlistData);
+      const playlistId = playlist.data['@id'].replace('/v1/playlists/', '');
+
+      const slideDataTemplate: SlideSlideInputJsonld = {
+        title: 'Slide-' + timestamp,
+        theme: '',
+        description: '',
+
+        templateInfo: {
+          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG', // This is a hardcoded id for the template  ImageText
+          options: [],
+        },
+        duration: null,
+        content: {
+          title: 'Overskrift på slide' + timestamp,
+          text: '<p>Tekst på slide</p>',
+        },
+        media: [],
+        feed: null,
+        published: { from: null, to: null },
+      } as unknown;
+
+      const slideData = await slideApi.createV1Slides(slideDataTemplate);
+
+      const slideId = slideData.data['@id'].replace('/v1/slides/', '');
+
+      const slidePlaylistData = [
+        {
+          slide: slideId,
+          weight: 0,
+        },
+      ];
+
+      const addToPlaylist = await playlistApi.putV1PlaylistSlideId(
+        playlistId,
+        slidePlaylistData,
+      );
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: app.service.ts ~ line 140 ~ AppService ~ createSlideInPlaylist ~ error',
+        error.message,
       );
     }
   }
