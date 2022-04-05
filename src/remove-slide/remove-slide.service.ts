@@ -52,7 +52,7 @@ export class RemoveSlideService {
     } catch (error) {
       console.log(
         '🚀 ~ file: remove-slide.service.ts ~ line 53 ~ RemoveSlideService ~ deleteSlide ~ error',
-        error,
+        error.message,
       );
     }
   }

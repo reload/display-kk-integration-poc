@@ -79,10 +79,6 @@ export class AppService {
     };
 
     const testplaylist = await playlistApi.createV1Playlist(playlistData);
-    console.log(
-      '🚀 ~ file: app.service.ts ~ line 82 ~ AppService ~ createTestPlaylist ~ testplaylist',
-      testplaylist,
-    );
   }
 
   async getSlides() {
@@ -158,7 +154,7 @@ export class AppService {
         description: '',
 
         templateInfo: {
-          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG',
+          '@id': '/v1/templates/01FP2SNGFN0BZQH03KCBXHKYHG', // This is a hardcoded id for the template  ImageText
           options: [],
         },
         duration: null,
@@ -185,10 +181,6 @@ export class AppService {
       const addToPlaylist = await playlistApi.putV1PlaylistSlideId(
         playlistId,
         slidePlaylistData,
-      );
-      console.log(
-        '🚀 ~ file: app.service.ts ~ line 224 ~ AppService ~ createSlideInPlaylist ~ addToPlaylist',
-        addToPlaylist,
       );
     } catch (error) {
       console.log(
